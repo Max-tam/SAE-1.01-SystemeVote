@@ -1,6 +1,6 @@
 /*
 auteur: Maxime TAMARIN
-dernière modification: 21/11/2022
+dernière modification: 22/11/2022
 */
 
 #include <iostream>
@@ -37,23 +37,42 @@ vector <string> votant() // construit un vector string contenant le nom prenom p
     return vNomPrenom;
 }
 
-vector <int> vote(const vector <string> & jeuxCandidat,const vector <string> & votant, const vector <int> & voteDesVotants)
+void AnalyseEntree()
+{
+    string ligneFichier;
+    int nombreTeste; // ligne 1
+    getline(cin,ligneFichier);
+    nombreTeste = ligneFichier.size(); //le nombre de caractère sur la première ligne = nombre de teste
+    string nom;
+    string prenom;
+    vector <string> vNomPrenom; // ligne 2 - n
+    while (true)
+    {
+        getline(cin,nom);
+        if (nom.size() == 0 || cin.eof()) break; // pourquoi pas de prise en compte du contenue de la ligne avant la fin ?
+        getline(cin,prenom);
+        vNomPrenom.resize(vNomPrenom.size()+1);
+        vNomPrenom[vNomPrenom.size()-1] = nom + " " + prenom;
+        cout << vNomPrenom[vNomPrenom.size()-1] <<endl;
+    }
+}
+
+vector <int> vote(const vector <string> & jeuxCandidat,const vector <string> & votant)
 {
     int indiceVotant = 0; // indice qui permet de faire passer tout les votants
     int candidatVote; // correspond au numero de placement dans la liste du jeux choisi
     vector <int> resultat; // tableau contenant les résulats ou le resultat resultat[i] se rapporte au candidat candidat[i]
     resultat.resize(jeuxCandidat.size()); // initialisation de la longueur à la même que cel du tableau candidat
-    cout << "\n\n---| choix du jeux |---\n\n";
-    for (size_t i = 0; i < jeuxCandidat.size(); ++i)
-    {
-        cout << jeuxCandidat[i] << " : " << i << endl; // affichage du jeux candidat et de son indice (place) attribué
-    }
-    cout << "---------------------\n\n";
     while (true) // boucle infini
     {
         if ( indiceVotant >= votant.size()) break; // condition de sortie de la boucle infini
-        cout << votant[indiceVotant]<< " -> " << voteDesVotants[indiceVotant] << endl;
-        candidatVote = voteDesVotants[indiceVotant]; // choix de l'utilisateur du jeux par son indice
+        cout << "\n\n---| choix du jeux |---\n\n";
+        for (size_t i = 0; i < jeuxCandidat.size(); ++i)
+        {
+            cout << jeuxCandidat[i] << " : " << i << endl; // affichage du jeux candidat et de son indice (place) attribué
+        }
+        cout << "\nparmi les jeux suivant quel est le meilleur ?\n\n"<< votant[indiceVotant]<< " -> ";
+        cin >> candidatVote; // choix de l'utilisateur du jeux par son indice
         if (candidatVote < jeuxCandidat.size()) // condition si l'indice correspond bien à la liste donné (pour éviter des erreurs de dépassement) (vote non pris en compte sinon)
         {
             resultat[candidatVote] = resultat[candidatVote] + 1; // ajoute une voie au jeux choisi
@@ -87,40 +106,12 @@ string systemeMajoritaire(const vector <int> & resultat, const vector <string> &
     return gagnant; // si il n'y en a pas
 }
 
-int testeOracle() // methode d'analyse du fichier teste oracle
-{
-    vector <string> candidat = { "Counter strike", "Street Fighter II","Civilization VI","Mario Kart"};
-    vector <string> votants = votant();
-    string ligneFichierOracle;
-    ifs.open("testeOracle.txt"); //ouvre le fichier de comparaison
-    while (true) //boucle infinie
-    {
-        if (ifs.eof()) break; // condition si fin de fichier
-        getline(ifs,ligneFichierOracle);
-        if (ligneFichierOracle == "systemeMajoritaire")
-        {
-            vector <int> voteDesVotants;
-            getline(ifs,ligneFichierOracle);
-            while (ligneFichierOracle != "finVote")
-            {
-                voteDesVotants.resize(voteDesVotants.size()+1);
-                voteDesVotants[voteDesVotants.size()-1] =  stoi(ligneFichierOracle); // conversion string -> int
-//                cout << voteDesVotants[voteDesVotants.size()-1] << endl; // teste (a supp)
-                getline(ifs,ligneFichierOracle);
-            }
-            vote(candidat,votants,voteDesVotants); // lance la méthode pour prendre en compte les votes
-        }
-    }
-    ifs.close();
-    return 1;
-}
-
 int main()
 {
-//    cout << "\n\n=====| Vote par Scrutin uninominal majoritaire à un tour |=====\n\n";
-
-//    vector <string> candidat = { "Counter strike", "Street Fighter II","Civilization VI","Mario Kart"}; // initialisation de la liste des jeux candidats
-//    vector <int> resultatVote (candidat.size());
+    vector <string> candidat = { "Counter strike", "Street Fighter II","Civilization VI","Mario Kart"}; // initialisation de la liste des jeux candidats
+    vector <int> resultatVote (candidat.size());
+    AnalyseEntree();
+    return 0;
 //    vector <string> votants = votant();
 //    resultatVote = vote(candidat,votants); // fonction pour enregistrer les votes manuellement
 //    string gagnant = systemeMajoritaire(resultatVote,candidat); // fonction de calcul automatique des résultats du systeme Majoritaire
@@ -132,6 +123,4 @@ int main()
 //    {
 //        cout << "\n\nLe gagnant du vote par systeme Majoritaire est " << gagnant << endl; // si il n'y a pas égalité
 //    }
-    testeOracle();
-    return 0;
 }
