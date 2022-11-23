@@ -12,50 +12,6 @@ using namespace std;
 ofstream ofs;
 ifstream ifs;
 
-vector <string> votant() // construit un vector string contenant le nom prenom par case
-{
-    string nom;
-    string prenom;
-    vector <string> vNomPrenom;
-    int nligne = 0; // ligne 0 = nom, ligne 1 = prenom, ligne 2 = nom,...
-    ifs.open("votants.txt"); // ouvre le fichier de la liste des votants
-    while (true) // boucle pour lire le fichier du début à la fin
-    {
-        if (ifs.eof()) break; // sortie si fin du fichier
-        if (nligne % 2 == 0) // si le reste donne 0 c'est la ligne du nom
-            getline(ifs,nom);
-        else // sinon c'est la ligne du prénom
-        {
-            getline(ifs,prenom);
-            vNomPrenom.resize(vNomPrenom.size()+1); // redimensionne à taille
-            vNomPrenom[vNomPrenom.size()-1] = nom + " " + prenom; // met nom prenom dans le vector
-//            cout << vNomPrenom[vNomPrenom.size()-1] << endl; //verifiation des cases du tableau
-        }
-        ++nligne; // ligne suivante du fichier "votants.txt"
-    }
-    ifs.close();
-    return vNomPrenom;
-}
-
-void AnalyseEntree()
-{
-    string ligneFichier;
-    int nombreTeste; // ligne 1
-    getline(cin,ligneFichier);
-    nombreTeste = ligneFichier.size(); //le nombre de caractère sur la première ligne = nombre de teste
-    string nom;
-    string prenom;
-    vector <string> vNomPrenom; // ligne 2 - n
-    while (true)
-    {
-        getline(cin,nom);
-        if ( nom == "f" || cin.eof()) break; // pourquoi pas de prise en compte du contenue de la ligne avant la fin ?
-        getline(cin,prenom);
-        vNomPrenom.resize(vNomPrenom.size()+1);
-        vNomPrenom[vNomPrenom.size()-1] = nom + " " + prenom;
-        cout << vNomPrenom[vNomPrenom.size()-1] << endl;
-    }
-}
 
 vector <int> vote(const vector <string> & jeuxCandidat,const vector <string> & votant)
 {
@@ -106,10 +62,42 @@ string systemeMajoritaire(const vector <int> & resultat, const vector <string> &
     return gagnant; // si il n'y en a pas
 }
 
+void AnalyseEntree()
+{
+    string ligneFichier;
+    int nombreTeste; // ligne 1
+    getline(cin,ligneFichier);
+    nombreTeste = ligneFichier.size(); //le nombre de caractère sur la première ligne = nombre de teste
+    string nom;
+    string prenom;
+    vector <string> vNomPrenom; // ligne 2 - n
+    while (true)
+    {
+        getline(cin,nom);
+        if ( nom == "f" || cin.eof()) break; // pourquoi pas de prise en compte du contenue de la ligne avant la fin ?
+        getline(cin,prenom);
+        vNomPrenom.resize(vNomPrenom.size()+1);
+        vNomPrenom[vNomPrenom.size()-1] = nom + " " + prenom;
+        cout << vNomPrenom[vNomPrenom.size()-1] << endl;
+    }
+    vector <string> candidat = { "Counter strike", "Street Fighter II","Civilization VI","Mario Kart"}; // initialisation de la liste des jeux candidats
+    for (int i = 0; i < nombreTeste; ++i) // suite à verifier (de ici)
+    {
+        vector <int> resultatVote (candidat.size());
+        resultatVote = vote(candidat,vNomPrenom);
+        for (int j = 0; j < 4; ++j)
+        {
+            getline(cin,ligneFichier);
+            if (stoi(ligneFichier) == resultatVote[j])
+                cout << "passe" << endl;
+            else
+                cout << "faux"; // à ici
+        }
+    }
+}
+
 int main()
 {
-    vector <string> candidat = { "Counter strike", "Street Fighter II","Civilization VI","Mario Kart"}; // initialisation de la liste des jeux candidats
-    vector <int> resultatVote (candidat.size());
     AnalyseEntree();
     return 0;
 //    vector <string> votants = votant();
