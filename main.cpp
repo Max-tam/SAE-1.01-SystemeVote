@@ -49,11 +49,11 @@ void AnalyseEntree()
     while (true)
     {
         getline(cin,nom);
-        if (nom.size() == 0 || cin.eof()) break; // pourquoi pas de prise en compte du contenue de la ligne avant la fin ?
+        if ( nom == "f" || cin.eof()) break; // pourquoi pas de prise en compte du contenue de la ligne avant la fin ?
         getline(cin,prenom);
         vNomPrenom.resize(vNomPrenom.size()+1);
         vNomPrenom[vNomPrenom.size()-1] = nom + " " + prenom;
-        cout << vNomPrenom[vNomPrenom.size()-1] <<endl;
+        cout << vNomPrenom[vNomPrenom.size()-1] << endl;
     }
 }
 
