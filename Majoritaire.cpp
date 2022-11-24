@@ -1,37 +1,32 @@
 /*
 auteur: Maxime TAMARIN
-dernière modification: 22/11/2022
+dernière modification: 24 /11/2022
 */
 
 #include <iostream>
 #include <vector>
-#include <fstream>
 
 using namespace std;
 
-ofstream ofs;
-ifstream ifs;
-
-
 vector <int> vote(const vector <string> & jeuxCandidat,const vector <string> & votant)
 {
-    int indiceVotant = 0; // indice qui permet de faire passer tout les votants
-    int candidatVote; // correspond au numero de placement dans la liste du jeux choisi
+    unsigned indiceVotant = 0; // indice qui permet de faire passer tout les votants
+    string candidatVote; // correspond au numero de placement dans la liste du jeux choisi (au départ il est sous forme de string
     vector <int> resultat; // tableau contenant les résulats ou le resultat resultat[i] se rapporte au candidat candidat[i]
     resultat.resize(jeuxCandidat.size()); // initialisation de la longueur à la même que cel du tableau candidat
+    cout << "\n\n---| choix du jeux |---\n\n";
+    for (size_t i = 0; i < jeuxCandidat.size(); ++i)
+    {
+        cout << jeuxCandidat[i] << " : " << i << endl; // affichage du jeux candidat et de son indice (place) attribué
+    }
     while (true) // boucle infini
     {
         if ( indiceVotant >= votant.size()) break; // condition de sortie de la boucle infini
-        cout << "\n\n---| choix du jeux |---\n\n";
-        for (size_t i = 0; i < jeuxCandidat.size(); ++i)
-        {
-            cout << jeuxCandidat[i] << " : " << i << endl; // affichage du jeux candidat et de son indice (place) attribué
-        }
         cout << "\nparmi les jeux suivant quel est le meilleur ?\n\n"<< votant[indiceVotant]<< " -> ";
-        cin >> candidatVote; // choix de l'utilisateur du jeux par son indice
-        if (candidatVote < jeuxCandidat.size()) // condition si l'indice correspond bien à la liste donné (pour éviter des erreurs de dépassement) (vote non pris en compte sinon)
+        getline(cin,candidatVote);// choix de l'utilisateur du jeux par son indice
+        if (stoi(candidatVote) < jeuxCandidat.size()) // condition si l'indice correspond bien à la liste donné (pour éviter des erreurs de dépassement) (vote non pris en compte sinon)
         {
-            resultat[candidatVote] = resultat[candidatVote] + 1; // ajoute une voie au jeux choisi
+            resultat[stoi(candidatVote)] = resultat[stoi(candidatVote)] + 1; // ajoute une voie au jeux choisi
         }
         ++indiceVotant;
     }
@@ -62,12 +57,12 @@ string systemeMajoritaire(const vector <int> & resultat, const vector <string> &
     return gagnant; // si il n'y en a pas
 }
 
-void AnalyseEntree()
+int AnalyseEntree()
 {
     string ligneFichier;
     int nombreTeste; // ligne 1
     getline(cin,ligneFichier);
-    nombreTeste = ligneFichier.size(); //le nombre de caractère sur la première ligne = nombre de teste
+    nombreTeste = stoi(ligneFichier); //le nombre sur la première ligne = nombre de teste
     string nom;
     string prenom;
     vector <string> vNomPrenom; // ligne 2 - n
@@ -88,27 +83,30 @@ void AnalyseEntree()
         for (int j = 0; j < 4; ++j)
         {
             getline(cin,ligneFichier);
-            if (stoi(ligneFichier) == resultatVote[j])
-                cout << "passe" << endl;
+            if (stoi(ligneFichier) != resultatVote[j]) // stoi() convertion string --> int
+            {
+                cout << "teste faux" << endl;
+                return -1;
+            }
             else
-                cout << "faux"; // à ici
+               cout << "teste passé" << endl; // à ici
         }
+        string nomGagnant;
+        nomGagnant = systemeMajoritaire(resultatVote,candidat);
+        getline(cin,ligneFichier);
+        if (ligneFichier != nomGagnant)
+        {
+            cout << "gagnant faux";
+            return -1;
+        }
+        else
+            cout << "gagnant juste";
     }
+    return 1;
 }
 
 int main()
 {
     AnalyseEntree();
     return 0;
-//    vector <string> votants = votant();
-//    resultatVote = vote(candidat,votants); // fonction pour enregistrer les votes manuellement
-//    string gagnant = systemeMajoritaire(resultatVote,candidat); // fonction de calcul automatique des résultats du systeme Majoritaire
-//    if (gagnant == "egalite")
-//    {
-//        cout << "\n\nPersonne n'a gagné. Il y a égalité" << endl; // si il y a égalité
-//    }
-//    else
-//    {
-//        cout << "\n\nLe gagnant du vote par systeme Majoritaire est " << gagnant << endl; // si il n'y a pas égalité
-//    }
 }
