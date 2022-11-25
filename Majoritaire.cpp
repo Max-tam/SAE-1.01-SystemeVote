@@ -1,6 +1,6 @@
 /*
 auteur: Maxime TAMARIN
-dernière modification: 24/11/2022 21:04
+dernière modification: 24/11/2022
 */
 
 #include <iostream>
@@ -29,7 +29,7 @@ vector <int> vote(const vector <string> & jeuxCandidat,const vector <string> & v
     {
         cout << jeuxCandidat[i] << " : " << resultat[i] << endl; // affiche les jeux et le nombres de voies attribué à la fin du vote
     }
-    return resultat;
+    return resultat; // renvoie un vector contenant les resultats du vote
 }
 
 string systemeMajoritaire(const vector <int> & resultat, const vector <string> & jeuxCandidat) //fonction du Vote par Scrutin uninominal majoritaire à un tour (renvoie le nom du gagnant)
@@ -57,7 +57,7 @@ string systemeMajoritaire(const vector <int> & resultat, const vector <string> &
     return gagnant; // si il n'y en a pas
 }
 
-int AnalyseEntree()
+int AnalyseEntree() // analyse le fichier en entrée et compare les résultats
 {
     string ligneFichier;
     int nombreTeste; // ligne 1
@@ -66,30 +66,30 @@ int AnalyseEntree()
     string nom;
     string prenom;
     vector <string> vNomPrenom; // ligne 2 - n
-    while (true)
+    while (true) // enregistre tout les votants
     {
         getline(cin,nom);
-        if ( nom == "f" || cin.eof()) break; // pourquoi pas de prise en compte du contenue de la ligne avant la fin ?
+        if ( nom == "f" || cin.eof()) break; // condition de sorti (cin.eof() en cas de bug de la première
         getline(cin,prenom);
-        vNomPrenom.resize(vNomPrenom.size()+1);
-        vNomPrenom[vNomPrenom.size()-1] = nom + " " + prenom;
+        vNomPrenom.resize(vNomPrenom.size()+1); // redimensionne à taille +1 le tableau
+        vNomPrenom[vNomPrenom.size()-1] = nom + " " + prenom; // chaque case = Nom Prenom
     }
     vector <string> candidat = { "Counter strike", "Street Fighter II","Civilization VI","Mario Kart"}; // initialisation de la liste des jeux candidats
     for (int i = 0; i < nombreTeste; ++i) // suite à verifier (de ici)
     {
         vector <int> resultatVote (candidat.size());
-        resultatVote = vote(candidat,vNomPrenom);
-        for (int j = 0; j < 4; ++j)
+        resultatVote = vote(candidat,vNomPrenom); // utilisation fonction vote
+        for (int j = 0; j < 4; ++j) // parcour les résultats
         {
             getline(cin,ligneFichier);
             if (stoi(ligneFichier) != resultatVote[j]) // stoi() convertion string --> int
-                return -1;
+                return -1; // si resultat correspond pas au attente retourne -1
         }
         string nomGagnant;
-        nomGagnant = systemeMajoritaire(resultatVote,candidat);
+        nomGagnant = systemeMajoritaire(resultatVote,candidat); // utilise fonction systemeMajoritaire
         getline(cin,ligneFichier);
         if (ligneFichier != nomGagnant)
-            return -1;
+            return -1; //si gagnant correspond pas au attente retourne -1
     }
     return 1;
 }
