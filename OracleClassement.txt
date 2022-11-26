@@ -1,0 +1,34 @@
+
+---| comptage des points |---
+
+Counter strike = 113
+Street Fighter II = 226
+Civilization VI = 339
+Mario Kart = 452
+
+---| annonce vainqueur |---
+
+le vainqueur est : Mario Kart
+
+---| comptage des points |---
+
+Counter strike = 113
+Street Fighter II = 392
+Civilization VI = 392
+Mario Kart = 226
+
+---| annonce vainqueur |---
+
+le vainqueur est : egalite
+
+---| comptage des points |---
+
+Counter strike = 113
+Street Fighter II = 280
+Civilization VI = 280
+Mario Kart = 452
+
+---| annonce vainqueur |---
+
+le vainqueur est : Mario Kart
+
